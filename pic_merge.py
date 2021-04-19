@@ -10,32 +10,31 @@ from PIL import Image
 import dir
 
 
-
-def rmHideFiles(list):
+def rm_hide_files(list):
   for i in range(len(list)-1,-1,-1):
     file = list[i]
     if (file.endswith('jpg') or file.endswith('png')) is False:
       del list[i]
 
-def getFileNameAndExt(fullFile):
+def get_file_name_and_ext(fullFile):
   if os.path.isfile is False:
     return ''
   return os.path.splitext(os.path.split(fullFile)[1])
 
-def getFileName(fullFile):
-  return getFileNameAndExt(fullFile)[0]
+def get_file_name(fullFile):
+  return get_file_name_and_ext(fullFile)[0]
 
-def isSecondFile(file):
-  name = getFileName(file).strip()
+def is_second_file(file):
+  name = get_file_name(file).strip()
   return name.endswith('(2)') or name.endswith('2')
 
-def getSecondFileName(fileName):
+def get_second_file_name(fileName):
   if fileName.strip().endswith('(1)'):
     return fileName.replace('(1)','(2)')
   else:
     return fileName+'2'
 
-def cropImg(img):
+def crop_img(img):
   fWidth,fHeight = img.size
   topCrop = 130
   bottomCrop = 145
@@ -51,8 +50,8 @@ if __name__ == '__main__':
 
   if os.path.isdir(path) == True :
     path_list = []
-    dir.listdir(path, path_list)
-    rmHideFiles(path_list)
+    dir.list_deep_dir(path, path_list)
+    rm_hide_files(path_list)
     toImage = None
     # tWidth,tHeight = 0, 0
 
@@ -62,13 +61,13 @@ if __name__ == '__main__':
 
       tWidth,tHeight = 0,0
       for file in path_list:
-        if isSecondFile(file):
+        if is_second_file(file):
           continue
 
         filePath,tName = os.path.split(file)
-        fileName,ext = getFileNameAndExt(file)
+        fileName,ext = get_file_name_and_ext(file)
         print(fileName,ext)
-        secondFileName = getSecondFileName(fileName)
+        secondFileName = get_second_file_name(fileName)
         print(secondFileName)
         sndFullFile = os.path.join(filePath,secondFileName+ext) #被合并的第2个文件
         if os.path.exists(sndFullFile) == False:
@@ -76,10 +75,10 @@ if __name__ == '__main__':
           continue
 
         firstImg =  Image.open(file)
-        firstImg = cropImg(firstImg)
+        firstImg = crop_img(firstImg)
         fWidth,fHeight = firstImg.size
         sndImg =  Image.open(sndFullFile)
-        sndImg = cropImg(sndImg)
+        sndImg = crop_img(sndImg)
         sWidth,sHeight = sndImg.size
         tWidth = max(fWidth,sWidth)
         tHeight = fHeight + sHeight

@@ -26,7 +26,7 @@ if __name__ == '__main__':
   # print(os.path.split(path))
   if os.path.isdir(path) == True and len(sub_path) > 0:
     path_list = []
-    dir.listdir(path, path_list)
+    dir.list_deep_dir(path, path_list)
     print(path_list)
 
 
